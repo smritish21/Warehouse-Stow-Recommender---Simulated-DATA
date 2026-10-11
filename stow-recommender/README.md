@@ -41,11 +41,11 @@ The model only ever sees allowed bins, so it **cannot** recommend a forbidden on
 
 6 levels (1 = floor, 6 = top shelf), 4 bins per level. Large bins (50×40×45 cm) at the bottom, medium (35×30×40) in the middle, small (25×20×35) at the top, with two small bins on level 4.
 
-## Why use ML if we know the rules?
+## Why this project?
 
-In a real warehouse, nobody can write down exactly what makes a stow "good". It depends on item shapes, how the bin is already arranged, how associates work, and more. What you *do* have is a log of past stows and whether they worked out (e.g. the item was easy to pick later). The model learns the fit preference from those outcomes.
+When stowing an item, it’s easy to miss the bigger picture: every bin in the pod, how easy the item will be to pick later, or a hazardous item that could spill. This project helps in two ways: safety rules automatically block unsafe bins, and an ML model ranks the remaining bins by how well the item fits. We use ML for the ranking; it depends on item shapes, how the bin is arranged. The ranking is only a recommendation, so stowers can still choose another allowed bin based on their own experience.
 
-Here, that log is **simulated**. Behind the simulation is a hidden "truth" (comfortable fit, space around the item), plus a hidden random factor for things the data doesn't capture. The model never sees the truth, only noisy good/bad outcomes. Because I know the truth, I can **check** whether the model really learned it. That's a standard way to validate a method before trusting it on real data.
+Here, that log is **simulated**. Behind the simulation is a hidden "truth" (comfortable fit, space around the item), plus a hidden random factor for things the data doesn't capture.
 
 ## Results
 
@@ -146,6 +146,7 @@ python -m stow_recommender.demo --seed 7 # repeatable example
 
 ## Next steps
 
+- Reuse pods across stows, updating bin contents after each stow and pick, so recommendations can account for what is likely to arrive next
 - Add picking frequency: fast movers go to levels 2–4 (the easiest to reach)
 - Try a pairwise ranking model (e.g. LightGBM's LambdaRank) and compare it with the pointwise model
 - Extend the hazardous rule to neighbouring bins

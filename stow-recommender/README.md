@@ -49,7 +49,7 @@ Here, that log is **simulated**. Behind the simulation is a hidden "truth" (comf
 
 ## Results
 
-
+```
  python -m stow_recommender.train
 
 Trained on 19937 simulated stows (39% went well)
@@ -62,7 +62,7 @@ Ranking quality on 500 new scenarios (higher is better):
   most_space        0.142                       4%
   random            0.437                      17%
 
-
+```
 **Key insight:** the classic "pack it as tight as possible" strategy is *no better than random* here, because tightly packed bins are hard to pick from. The model learned the comfortable-fit sweet spot purely from noisy outcomes:
 
 ![What the model learned](reports/learned_fit_curve.png)

@@ -110,6 +110,11 @@ stow_recommender/
   train.py       Trains the model, compares it with baselines, saves model and plot
   recommend.py   Rules + model -> best fit / good fit / not allowed
   demo.py        Shows a recommendation in the terminal
+tests/
+  test_rules.py                   Every rule, including boundary values (exactly 4 kg, exactly 3 cm)
+  test_features_and_metrics.py    Features, the simulated truth, NDCG by hand calculation
+  test_recommend.py               Output structure + the safety property (300 random cases)
+  test_model_quality.py           Quality gates: model must clearly beat all baselines
 ```
 
 ## How to run
@@ -119,6 +124,7 @@ python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
+pytest                                   # all tests (~15 seconds)
 python -m stow_recommender.train         # train (~30 seconds), writes reports/
 python -m stow_recommender.demo          # random example
 python -m stow_recommender.demo --seed 7 # repeatable example

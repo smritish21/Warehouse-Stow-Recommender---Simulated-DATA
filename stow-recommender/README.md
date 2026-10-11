@@ -49,53 +49,50 @@ Here, that log is **simulated**. Behind the simulation is a hidden "truth" (comf
 
 ## Results
 
-<!-- Fill in from the output of `python -m stow_recommender.train` (also in reports/metrics.json) -->
 
-Ranking quality on 500 new, unseen scenarios:
+ python -m stow_recommender.train
 
-| Method | NDCG@3 | Top pick is one of the 3 truly best bins |
-|---|---|---|
-| **ML model** | _fill in_ | _fill in_ |
-| Tightest fit (classic bin packing) | _fill in_ | _fill in_ |
-| Most free space | _fill in_ | _fill in_ |
-| Random allowed bin | _fill in_ | _fill in_ |
+Trained on 19937 simulated stows (39% went well)
+Holdout ROC AUC: 0.874
+
+Ranking quality on 500 new scenarios (higher is better):
+  method           NDCG@3   top pick in true top 3
+  model             0.957                      83%
+  tightest_fit      0.411                       6%
+  most_space        0.142                       4%
+  random            0.437                      17%
+
 
 **Key insight:** the classic "pack it as tight as possible" strategy is *no better than random* here, because tightly packed bins are hard to pick from. The model learned the comfortable-fit sweet spot purely from noisy outcomes:
 
 ![What the model learned](reports/learned_fit_curve.png)
 
-### Example (`python -m stow_recommender.demo --seed 10`)
-
-A heavy, hazardous item:
+### Example (`python -m stow_recommender.demo --seed 7`)
 
 ```
-Item DEMO: 24.6 x 38.2 x 23.3 cm, 7.27 kg, hazardous: yes
+
+Item DEMO: 26.1 x 24.0 x 14.1 cm, 1.9 kg, hazardous: no
 
 Pod (top shelf first)    [1][2][3] = best fit   ok = good fit   XX = not allowed
 
-  Level 6 |  XX S  49%  |  XX S  54%* |  XX S  20%  |  XX S  84%
-  Level 5 |  XX S  33%  |  XX S  71%  |  XX S  29%* |  XX S  39%
-  Level 4 | [3] M  13%  |  XX M  74%  |  XX S  22%* |  XX S  12%
-  Level 3 |  ok M  26%  |  ok M  44%  |  ok M  24%  |  ok M  28%
-  Level 2 |  ok L  70%  |  ok L  12%  |  ok L  12%  |  ok L  19%
-  Level 1 |  ok L  59%  | [1] L  36%  |  ok L  70%  | [2] L  49%
+  Level 6 |  ok S  43%  |  XX S  54%  |  ok S   8%  |  ok S  43% 
+  Level 5 |  ok S  17%  |  ok S   0%  |  XX S  71%  |  ok S  23% 
+  Level 4 |  ok M  78%  |  ok S  44%  |  ok S  21%* |  ok M  16% 
+  Level 3 |  ok M  14%  |  ok M   4%  |  ok M   3%  | [1] M  44% 
+  Level 2 |  ok L  38%  | [2] L  47%  | [3] L  67%  |  ok L  84% 
+  Level 1 |  ok L   0%  |  ok L  70%  |  ok L  40%  |  ok L  24% 
 
   S/M/L = bin size, % = how full now, * = holds a hazardous item
 
-  Best fit 1: P1-L1-C2  (score 0.89)
-  Best fit 2: P1-L1-C4  (score 0.77)
-  Best fit 3: P1-L4-C1  (score 0.57)
+  Best fit 1: P1-L3-C4  (score 0.90)
+  Best fit 2: P1-L2-C2  (score 0.75)
+  Best fit 3: P1-L2-C3  (score 0.69)
 
   Not allowed:
-    11 bins: does not fit
-     4 bins: too heavy for level 5 (max 4 kg)
-     4 bins: too heavy for level 6 (max 4 kg)
-     3 bins: bin already holds a hazardous item
+     2 bins: does not fit
 ```
 
-Bin L4-C1 would end up at a comfortable 65% full, but the item's sides leave less than 2 cm of space in a medium bin, so the model ranks it only third. The level-3 bins would end up 76–96% full, which is too tight.
 
-(Your exact output depends on your trained model.)
 
 ## Project structure
 
@@ -110,11 +107,7 @@ stow_recommender/
   train.py       Trains the model, compares it with baselines, saves model and plot
   recommend.py   Rules + model -> best fit / good fit / not allowed
   demo.py        Shows a recommendation in the terminal
-tests/
-  test_rules.py                   Every rule, including boundary values (exactly 4 kg, exactly 3 cm)
-  test_features_and_metrics.py    Features, the simulated truth, NDCG by hand calculation
-  test_recommend.py               Output structure + the safety property (300 random cases)
-  test_model_quality.py           Quality gates: model must clearly beat all baselines
+
 ```
 
 ## How to run
@@ -124,7 +117,6 @@ python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-pytest                                   # all tests (~15 seconds)
 python -m stow_recommender.train         # train (~30 seconds), writes reports/
 python -m stow_recommender.demo          # random example
 python -m stow_recommender.demo --seed 7 # repeatable example

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Created by training. reports/ is NOT ignored: commit your metrics and plot.
+models/

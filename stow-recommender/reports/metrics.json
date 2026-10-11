@@ -1,0 +1,23 @@
+{
+  "n_train_events": 19937,
+  "good_stow_rate_train": 0.3933390179064052,
+  "holdout_roc_auc": 0.8755142925972996,
+  "ranking": {
+    "model": {
+      "ndcg@3": 0.9572682476376688,
+      "top1_in_true_top3": 0.83
+    },
+    "tightest_fit": {
+      "ndcg@3": 0.4104811518549588,
+      "top1_in_true_top3": 0.064
+    },
+    "most_space": {
+      "ndcg@3": 0.14273619463571402,
+      "top1_in_true_top3": 0.038
+    },
+    "random": {
+      "ndcg@3": 0.45202099625767245,
+      "top1_in_true_top3": 0.238
+    }
+  }
+}
